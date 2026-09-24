@@ -1,0 +1,20 @@
+# Pathly Kubernetes Operator — SLA target example
+#
+# Product: https://pathlyhq.com · API: https://pathlyhq.com/en/developers
+# Auth: PathlyConnection → Secret holding PATHLY_API_TOKEN (see connection.yaml).
+apiVersion: pathly.pathlyhq.com/v1alpha1
+kind: PathlySlaTarget
+metadata:
+  name: home-availability
+  namespace: default
+spec:
+  connectionRef:
+    name: default
+  # Set monitorId to the Pathly scenario id (status.id of a PathlyScenario).
+  monitorId: REPLACE_WITH_SCENARIO_ID
+  name: Home page — 99.9 %
+  objectivePct: 99.9
+  windowDays: 30
+  excludeMaintenance: true
+  warnAtBudgetRatio: 0.8
+  enabled: true

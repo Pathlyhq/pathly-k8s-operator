@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pathly-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pathly-k8s-operator
+  namespace: pathly-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pathly-k8s-operator
+rules:
+  - apiGroups: [pathly.pathlyhq.com]
+    resources:
+      - pathlyconnections
+      - pathlyscenarios
+      - pathlywebhooks
+      - pathlymaintenancewindows
+      - pathlyslatargets
+    verbs: [get, list, watch, create, update, patch, delete]
+  - apiGroups: [pathly.pathlyhq.com]
+    resources:
+      - pathlyconnections/status
+      - pathlyscenarios/status
+      - pathlywebhooks/status
+      - pathlymaintenancewindows/status
+      - pathlyslatargets/status
+      - pathlyscenarios/finalizers
+      - pathlywebhooks/finalizers
+      - pathlymaintenancewindows/finalizers
+      - pathlyslatargets/finalizers
+    verbs: [get, update, patch]
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pathly-k8s-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pathly-k8s-operator
+subjects:
+  - kind: ServiceAccount
+    name: pathly-k8s-operator
+    namespace: pathly-system

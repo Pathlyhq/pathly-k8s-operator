@@ -1,0 +1,25 @@
+# Pathly Kubernetes Operator — PathlyConnection + Secret for PATHLY_API_TOKEN
+#
+# 1. Create an API token at https://pathlyhq.com (docs: https://pathlyhq.com/en/developers)
+# 2. Put PATHLY_API_TOKEN in the Secret below. Never commit a real token.
+# 3. PathlyConnection references that Secret for all CRDs in this namespace.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pathly-api-token
+  namespace: default
+type: Opaque
+stringData:
+  # Replace with your PATHLY_API_TOKEN from https://pathlyhq.com
+  token: "REPLACE_WITH_PATHLY_API_TOKEN"
+---
+apiVersion: pathly.pathlyhq.com/v1alpha1
+kind: PathlyConnection
+metadata:
+  name: default
+  namespace: default
+spec:
+  secretRef:
+    name: pathly-api-token
+    key: token
+  # baseURL: https://api.pathlyhq.com

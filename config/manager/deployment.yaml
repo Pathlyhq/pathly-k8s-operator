@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pathly-k8s-operator
+  namespace: pathly-system
+  labels:
+    app.kubernetes.io/name: pathly-k8s-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pathly-k8s-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pathly-k8s-operator
+    spec:
+      serviceAccountName: pathly-k8s-operator
+      containers:
+        - name: manager
+          image: pathlyhq/pathly-k8s-operator:0.1.0
+          args:
+            - --leader-elect=false
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: health
+              containerPort: 8081
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi

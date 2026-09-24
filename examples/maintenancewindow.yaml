@@ -1,0 +1,16 @@
+# Pathly Kubernetes Operator — Maintenance window example
+#
+# Product: https://pathlyhq.com · API: https://pathlyhq.com/en/developers
+# Auth: PathlyConnection → Secret holding PATHLY_API_TOKEN (see connection.yaml).
+apiVersion: pathly.pathlyhq.com/v1alpha1
+kind: PathlyMaintenanceWindow
+metadata:
+  name: weekly-backup
+  namespace: default
+spec:
+  connectionRef:
+    name: default
+  weekday: 0
+  startMinute: 180
+  durationMin: 120
+  reason: Weekly backup

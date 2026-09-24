@@ -1,0 +1,86 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: pathlyscenarios.pathly.pathlyhq.com
+spec:
+  group: pathly.pathlyhq.com
+  names:
+    kind: PathlyScenario
+    listKind: PathlyScenarioList
+    plural: pathlyscenarios
+    shortNames: [psc]
+    singular: pathlyscenario
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      schema:
+        openAPIV3Schema:
+          description: >-
+            PathlyScenario is a Pathly HTTP monitoring scenario (HTTP-only policy).
+            Browser journeys are not accepted so credentials never land in etcd.
+            Create PATHLY_API_TOKEN at https://pathlyhq.com and reference it via PathlyConnection.
+            Docs: https://pathlyhq.com/en/developers
+          type: object
+          required: [spec]
+          properties:
+            spec:
+              type: object
+              required: [connectionRef, name]
+              properties:
+                connectionRef:
+                  description: >-
+                    PathlyConnection (same namespace) whose Secret holds PATHLY_API_TOKEN
+                    from https://pathlyhq.com
+                  type: object
+                  required: [name]
+                  properties:
+                    name: { type: string }
+                name: { type: string }
+                type:
+                  description: >-
+                    Scenario type. Only "http" is accepted (HTTP-only policy).
+                    Browser step ASTs are rejected. See https://pathlyhq.com/en/developers
+                  type: string
+                  enum: [http]
+                url: { type: string }
+                intervalSec: { type: integer, format: int64 }
+                method: { type: string }
+                expectedStatus: { type: integer, format: int64 }
+                maxLatencyMs: { type: integer, format: int64 }
+                expectText: { type: string }
+                regions:
+                  type: array
+                  items: { type: string }
+                tags:
+                  type: array
+                  items: { type: string }
+                folder: { type: string }
+                severity: { type: string }
+                runbook: { type: string }
+                cron: { type: string }
+                enabled: { type: boolean }
+            status:
+              type: object
+              properties:
+                id: { type: string }
+                lastStatus: { type: string }
+                scenarioFingerprint: { type: string }
+                createdAt: { type: string }
+                mutedUntil: { type: string }
+                ready: { type: boolean }
+                message: { type: string }
+                observedGeneration: { type: integer, format: int64 }
+      additionalPrinterColumns:
+        - name: Ready
+          type: boolean
+          jsonPath: .status.ready
+        - name: ID
+          type: string
+          jsonPath: .status.id
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp

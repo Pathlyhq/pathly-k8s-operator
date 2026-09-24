@@ -1,0 +1,64 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: pathlymaintenancewindows.pathly.pathlyhq.com
+spec:
+  group: pathly.pathlyhq.com
+  names:
+    kind: PathlyMaintenanceWindow
+    listKind: PathlyMaintenanceWindowList
+    plural: pathlymaintenancewindows
+    shortNames: [pmw]
+    singular: pathlymaintenancewindow
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      schema:
+        openAPIV3Schema:
+          type: object
+          required: [spec]
+          properties:
+            spec:
+              type: object
+              required: [connectionRef]
+              properties:
+                connectionRef:
+                  type: object
+                  required: [name]
+                  properties:
+                    name: { type: string }
+                monitorId: { type: string }
+                startsAt: { type: string }
+                endsAt: { type: string }
+                reason: { type: string }
+                weekday: { type: integer, format: int64 }
+                startMinute: { type: integer, format: int64 }
+                durationMin: { type: integer, format: int64 }
+            status:
+              type: object
+              properties:
+                id: { type: string }
+                monitorId: { type: string }
+                startsAt: { type: string }
+                endsAt: { type: string }
+                reason: { type: string }
+                weekday: { type: integer, format: int64 }
+                startMinute: { type: integer, format: int64 }
+                durationMin: { type: integer, format: int64 }
+                ready: { type: boolean }
+                message: { type: string }
+                observedGeneration: { type: integer, format: int64 }
+      additionalPrinterColumns:
+        - name: Ready
+          type: boolean
+          jsonPath: .status.ready
+        - name: ID
+          type: string
+          jsonPath: .status.id
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp

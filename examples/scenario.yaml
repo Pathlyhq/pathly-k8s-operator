@@ -1,0 +1,25 @@
+# Pathly Kubernetes Operator — HTTP scenario example
+#
+# Product: https://pathlyhq.com
+# API docs: https://pathlyhq.com/en/developers
+# Token: PATHLY_API_TOKEN in a Secret via PathlyConnection (see connection.yaml).
+#
+# HTTP scenario only — browser journeys are not managed by this operator
+# (credentials must not land in etcd). Manage browsers at https://pathlyhq.com
+apiVersion: pathly.pathlyhq.com/v1alpha1
+kind: PathlyScenario
+metadata:
+  name: home-page
+  namespace: default
+spec:
+  connectionRef:
+    name: default
+  name: Home page
+  type: http
+  url: https://shop.example.com
+  intervalSec: 300
+  expectedStatus: 200
+  expectText: Our products
+  tags: [prod, storefront]
+  severity: critical
+  enabled: true

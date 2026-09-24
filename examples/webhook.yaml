@@ -1,0 +1,17 @@
+# Pathly Kubernetes Operator — Webhook example
+#
+# Product: https://pathlyhq.com · API: https://pathlyhq.com/en/developers
+# Auth: PathlyConnection → Secret holding PATHLY_API_TOKEN (see connection.yaml).
+apiVersion: pathly.pathlyhq.com/v1alpha1
+kind: PathlyWebhook
+metadata:
+  name: alerts
+  namespace: default
+spec:
+  connectionRef:
+    name: default
+  url: https://hooks.example.com/pathly
+  events:
+    - run.failed
+    - run.recovered
+    - incident.opened
