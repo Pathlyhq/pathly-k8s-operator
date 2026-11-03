@@ -69,7 +69,7 @@ Module: `github.com/pathlyhq/pathly-k8s-operator`
 |---|---|
 | [pathly-crossplane](https://github.com/pathlyhq/pathly-crossplane) | Crossplane provider |
 | [pathly-sdk-go](https://github.com/pathlyhq/pathly-sdk-go) | Go SDK |
-| [pathly-terraform-provider](https://github.com/pathlyhq/pathly-terraform-provider) | Terraform / OpenTofu |
+| [terraform-provider-pathly](https://github.com/Pathlyhq/terraform-provider-pathly) | Terraform / OpenTofu |
 | [Pathly product](https://pathlyhq.com) | [Pathly monitoring](https://pathlyhq.com) |
 ## À propos de Pathly
 
