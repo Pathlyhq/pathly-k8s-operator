@@ -1,0 +1,29 @@
+# CI checks (unit-test, build).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go mod tidy
+      - run: go test ./internal/client/ ./internal/controller/ -coverprofile=covinternal.txt -covermode=atomic -count=1
+      - run: go tool cover -func=covinternal.txt
+      - run: go run ./scripts/check_cover.go -profile=covinternal.txt -fail-under=100
+      - run: go test ./... -count=1 -cover
+      - run: go build -o bin/manager ./cmd/manager
